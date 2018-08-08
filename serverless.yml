@@ -1,0 +1,39 @@
+# Welcome to Serverless!
+---
+service: goaws
+
+provider:
+  name: aws
+  runtime: go1.x
+  memorySize: 128
+  timeout: 10 # optional, in seconds, default is 6
+  versionFunctions: false # optional, default is true
+  stage: dev
+  region: eu-central-1
+  environment:
+    SERVICE_NAME: ${self:service}
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  weather:
+    handler: bin/weather
+    events:
+      - http:
+          path: weather
+          method: get
+  #  reservedConcurrency: 5 # optional, reserved concurrency limit for this function. By default, AWS uses account concurrency limit
+  #  GIVES ERROR - https://github.com/serverless/serverless/issues/4964
+
+  airq:
+    handler: bin/airq
+    events:
+      - http:
+          path: airq
+          method: get
+  #  reservedConcurrency: 5 # optional, reserved concurrency limit for this function. By default, AWS uses account concurrency limit
+  #  GIVES ERROR - https://github.com/serverless/serverless/issues/4964
